@@ -23,7 +23,14 @@ jobs:
     steps: 
       - name: Print farewell 
         run: echo "Goodbye"
-
+  linting: 
+    name: Run the linter
+    runs-on: windows-latest
+    steps:
+      - name: Install the linter package
+        run: pip install ruff
+      - name: Run ruff
+        run: ruff check
   test: 
     name: Test the Python package 
     runs-on: ${{matrix.platform}}
@@ -34,6 +41,7 @@ jobs:
        include: 
         - python-version: "3.13"
           platform: "macos-15"
+    needs: linting
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
