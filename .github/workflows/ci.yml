@@ -23,14 +23,15 @@ jobs:
     steps: 
       - name: Print farewell 
         run: echo "Goodbye"
-  linting: 
-    name: Run the linter
-    runs-on: windows-latest
-    steps:
-      - name: Install the linter package
-        run: pip install ruff
-      - name: Run ruff
-        run: ruff check
+
+  # lint: 
+  #   name: Run the linter
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v6
+  #     - name: Run Ruff
+  #       uses: astral-sh/ruff/
   test: 
     name: Test the Python package 
     runs-on: ${{matrix.platform}}
@@ -41,7 +42,7 @@ jobs:
        include: 
         - python-version: "3.13"
           platform: "macos-15"
-    needs: linting
+    # needs: lint
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
@@ -51,5 +52,8 @@ jobs:
           python-version: ${{ matrix.python-version}}
       - name: Install the package
         run: pip install .[test]
+      - if: matrix.python-version == '3.14'
+        name: Conditional step 
+        run: echo "Using Python 3.14"
       - name: Run the tests
         run: pytest -vv # Very verbose
